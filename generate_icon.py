@@ -6,6 +6,15 @@ Uso:
     python generate_icon.py
 """
 
+import sys as _sys
+
+# Forzar UTF-8 en stdout/stderr para evitar UnicodeEncodeError en Windows CI
+try:
+    _sys.stdout.reconfigure(encoding="utf-8")
+    _sys.stderr.reconfigure(encoding="utf-8")
+except (AttributeError, OSError):
+    pass
+
 from pathlib import Path
 
 try:
@@ -70,12 +79,12 @@ def main():
 
     # PNG principal (Linux, macOS, splash)
     create_icon(512).save(assets / "icon.png", "PNG")
-    print(f"  · {assets/'icon.png'}")
+    print(f"  -> {assets / 'icon.png'}")
 
     # PNG secundario (para .deb, 256x256)
     icon_256 = create_icon(256)
     icon_256.save(assets / "icon_256.png", "PNG")
-    print(f"  · {assets/'icon_256.png'}")
+    print(f"  -> {assets / 'icon_256.png'}")
 
     # ICO multi-resolución para Windows
     icon_256.save(
@@ -84,9 +93,9 @@ def main():
         sizes=[(16, 16), (24, 24), (32, 32), (48, 48),
                (64, 64), (128, 128), (256, 256)],
     )
-    print(f"  · {assets/'icon.ico'}")
+    print(f"  -> {assets / 'icon.ico'}")
 
-    print("\n✅ Iconos generados en ./assets/")
+    print("\n[OK] Iconos generados en ./assets/")
 
 
 if __name__ == "__main__":

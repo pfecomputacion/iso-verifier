@@ -10,14 +10,19 @@ jobs:
   build:
     name: Build on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    env:
+      PYTHONUTF8: "1"
+      PYTHONIOENCODING: "utf-8"
     strategy:
       fail-fast: false
       matrix:
         include:
           - os: windows-latest
             artifact_name: iso-verifier.exe
+            asset_name: iso-verifier-${{ github.ref_name }}-windows.exe
           - os: ubuntu-latest
             artifact_name: iso-verifier_1.7.0_amd64.deb
+            asset_name: iso-verifier-${{ github.ref_name }}-linux.deb
 
     steps:
       - name: Checkout
@@ -40,6 +45,17 @@ jobs:
       - name: Build with PyInstaller
         run: |
           pyinstaller --onefile --windowed --name iso-verifier iso_verifier.py
+
+      - name: Build .deb (Linux only)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          python - <<'PY'
+          import shutil, subprocess
+          from pathlib import Path
+          subprocess.run(["pyinstaller", "--onefile", "--windowed",
+                          "--name", "iso-verifier", "iso_verifier.py"], check=True)
+          PY
+          python build_installers.py
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
