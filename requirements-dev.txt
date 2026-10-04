@@ -1,0 +1,15 @@
+# Incluye las de producción
+-r requirements.txt
+
+# Empaquetado
+pyinstaller>=6.0.0
+debx>=0.4.0
+
+# Calidad de código (opcional pero recomendado)
+ruff>=0.4.0
+black>=24.0.0
+mypy>=1.10.0
+
+# Tests (opcional)
+pytest>=8.0.0
+pytest-qt>=4.4.0

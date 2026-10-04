@@ -1,0 +1,81 @@
+# --- Entornos virtuales
+.venv/
+venv/
+env/
+ENV/
+
+# --- Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# --- PyInstaller
+*.spec
+dist/
+build/
+
+# --- Entornos de desarrollo
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# --- Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+*.lnk
+
+# --- Configuración local de la app (QSettings)
+*.conf
+*.ini
+!pytest.ini
+!setup.cfg
+
+# --- Logs y temporales
+*.log
+*.tmp
+*.bak
+log.txt
+
+# --- Cobertura / tests
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.tox/
+.nox/
+
+# --- Node (por si se añade tooling frontend)
+node_modules/
+package-lock.json
+
+# --- Instaladores generados
+*.deb
+*.rpm
+*.msi
+
+# --- Capturas de trabajo
+screenshots/
+*.png
+!assets/icon.png
+!assets/icon_256.png
+!docs/screenshots/*.png
