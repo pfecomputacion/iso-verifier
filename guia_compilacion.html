@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Guía de compilación — Verificador de Firmas ISO</title>
+<style>
+    :root {
+        --primary: #27ae60;
+        --primary-dark: #1e8449;
+        --accent: #3498db;
+        --bg: #f5f6fa;
+        --card: #ffffff;
+        --fg: #2c3e50;
+        --fg-muted: #57606f;
+        --border: #dcdde1;
+        --code-bg: #2d2d3a;
+        --code-fg: #f0f0f5;
+        --warn-bg: #fef5e7;
+        --warn-border: #f39c12;
+        --danger-bg: #fdeaea;
+        --danger-border: #e74c3c;
+        --info-bg: #ebf5fb;
+        --info-border: #3498db;
+        --ok-bg: #e8f8f0;
+        --ok-border: #27ae60;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+        font-family: -apple-system, "Segoe UI", "Ubuntu", sans-serif;
+        background: var(--bg);
+        color: var(--fg);
+        line-height: 1.6;
+        margin: 0;
+        padding: 40px 20px;
+        font-size: 15px;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+        background: var(--card);
+        padding: 60px 70px;
+        border-radius: 12px;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    }
+
+    header {
+        border-bottom: 3px solid var(--primary);
+        padding-bottom: 20px;
+        margin-bottom: 40px;
+    }
+
+    h1 {
+        font-size: 32px;
+        margin: 0 0 8px 0;
+        color: var(--fg);
+        font-weight: 700;
+    }
+
+    .subtitle {
+        color: var(--fg-muted);
+        font-size: 15px;
+        margin: 0;
+    }
+
+    .badge {
+        display: inline-block;
+        background: var(--primary);
+        color: white;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 3px 10px;
+        border-radius: 12px;
+        margin-left: 10px;
+        vertical-align: middle;
+    }
+
+    h2 {
+        font-size: 22px;
+        color: var(--fg);
+        margin-top: 40px;
+        margin-bottom: 16px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--border);
+        font-weight: 600;
+    }
+
+    h3 {
+        font-size: 17px;
+        color: var(--primary-dark);
+        margin-top: 24px;
+        margin-bottom: 12px;
+        font-weight: 600;
+    }
+
+    h4 {
+        font-size: 15px;
+        color: var(--fg);
+        margin-top: 20px;
+        margin-bottom: 10px;
+        font-weight: 600;
+    }
+
+    p { margin: 10px 0; }
+
+    code {
+        background: #eef0f4;
+        color: #c7254e;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: "Consolas", "Monaco", monospace;
+        font-size: 13px;
+    }
+
+    pre {
+        background: var(--code-bg);
+        color: var(--code-fg);
+        padding: 16px 20px;
+        border-radius: 8px;
+        overflow-x: auto;
+        font-family: "Consolas", "Monaco", monospace;
+        font-size: 13px;
+        line-height: 1.5;
+        margin: 12px 0;
+        border-left: 4px solid var(--primary);
+    }
+
+    pre code {
+        background: transparent;
+        color: inherit;
+        padding: 0;
+        font-size: 13px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 16px 0;
+        font-size: 14px;
+    }
+
+    th, td {
+        border: 1px solid var(--border);
+        padding: 10px 14px;
+        text-align: left;
+        vertical-align: top;
+    }
+
+    th {
+        background: #f0f2f6;
+        font-weight: 600;
+        color: var(--fg);
+    }
+
+    tr:nth-child(even) td {
+        background: #fafbfc;
+    }
+
+    .box {
+        border-radius: 8px;
+        padding: 14px 20px;
+        margin: 16px 0;
+        border-left: 4px solid;
+        font-size: 14px;
+    }
+
+    .box-warn {
+        background: var(--warn-bg);
+        border-color: var(--warn-border);
+    }
+
+    .box-danger {
+        background: var(--danger-bg);
+        border-color: var(--danger-border);
+    }
+
+    .box-info {
+        background: var(--info-bg);
+        border-color: var(--info-border);
+    }
+
+    .box-ok {
+        background: var(--ok-bg);
+        border-color: var(--ok-border);
+    }
+
+    .box strong {
+        display: block;
+        margin-bottom: 6px;
+    }
+
+    ul, ol { padding-left: 26px; }
+    li { margin: 6px 0; }
+
+    hr {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 40px 0;
+    }
+
+    .toc {
+        background: #fafbfc;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 20px 28px;
+        margin-bottom: 40px;
+    }
+
+    .toc h3 {
+        margin-top: 0;
+        color: var(--fg);
+        font-size: 15px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .toc ol { margin: 0; }
+
+    .toc a {
+        color: var(--accent);
+        text-decoration: none;
+    }
+
+    .toc a:hover { text-decoration: underline; }
+
+    footer {
+        margin-top: 60px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border);
+        text-align: center;
+        color: var(--fg-muted);
+        font-size: 13px;
+    }
+
+    .footer-tag {
+        display: inline-block;
+        background: #eef0f4;
+        padding: 4px 12px;
+        border-radius: 12px;
+        margin: 4px;
+        font-family: "Consolas", monospace;
+        font-size: 12px;
+    }
+
+    /* Ajustes para impresión / PDF */
+    @media print {
+        body {
+            background: white;
+            padding: 0;
+            font-size: 11pt;
+        }
+        .container {
+            box-shadow: none;
+            border-radius: 0;
+            padding: 20mm 15mm;
+            max-width: 100%;
+        }
+        h1 { font-size: 22pt; }
+        h2 { font-size: 15pt; page-break-after: avoid; }
+        h3 { font-size: 12pt; page-break-after: avoid; }
+        pre, table, .box {
+            page-break-inside: avoid;
+        }
+        a { color: var(--accent); text-decoration: none; }
+        .no-print { display: none !important; }
+        header { page-break-after: avoid; }
+    }
+
+    /* Page break helpers */
+    .page-break { page-break-before: always; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<header>
+    <h1>📦 Guía de compilación<span class="badge">v1.0</span></h1>
+    <p class="subtitle">Verificador de Firmas ISO — Cómo generar el <code>.exe</code>, el instalador <code>setup.exe</code> y el paquete <code>.deb</code></p>
+</header>
+
+<div class="toc">
+    <h3>📑 Índice</h3>
+    <ol>
+        <li><a href="#req">Prerrequisitos</a></li>
+        <li><a href="#env">Preparar el entorno virtual</a></li>
+        <li><a href="#icons">Generar los iconos</a></li>
+        <li><a href="#build">Compilar todo</a></li>
+        <li><a href="#result">Resultado final</a></li>
+        <li><a href="#test">Verificar los artefactos</a></li>
+        <li><a href="#deb-linux">Generar un <code>.deb</code> funcional en Linux</a></li>
+        <li><a href="#clean">Limpiar y recompilar</a></li>
+        <li><a href="#trouble">Solución de problemas</a></li>
+    </ol>
+</div>
+
+<h2 id="req">1 · Prerrequisitos</h2>
+
+<h3>En Windows</h3>
+
+<table>
+    <thead>
+        <tr><th>Herramienta</th><th>Para qué</th><th>Descarga</th></tr>
+    </thead>
+    <tbody>
+        <tr><td><strong>Python 3.10+</strong></td><td>Todo el proyecto</td><td><a href="https://python.org">python.org</a></td></tr>
+        <tr><td><strong>Inno Setup 6</strong></td><td>Generar el instalador <code>.exe</code></td><td><a href="https://jrsoftware.org/isdl.php">jrsoftware.org</a></td></tr>
+        <tr><td><strong>GnuPG (gpg4win)</strong></td><td>Verificación GPG</td><td><a href="https://www.gpg4win.org/">gpg4win.org</a></td></tr>
+    </tbody>
+</table>
+
+<div class="box box-warn">
+    <strong>⚠️ Importante</strong>
+    Inno Setup es imprescindible para generar el <code>setup.exe</code>. Sin él, el script solo generará el <code>.deb</code> y el <code>.exe</code> "pelado" de PyInstaller.
+</div>
+
+<h3>En Linux (Debian/Ubuntu)</h3>
+
+<pre><code>sudo apt update
+sudo apt install -y python3-venv python3-pip dpkg-dev</code></pre>
+
+<h2 id="env" class="page-break">2 · Preparar el entorno virtual</h2>
+
+<p>Desde Git Bash, en la carpeta del proyecto:</p>
+
+<pre><code>cd ~/Documents/Iso_Verifier
+source .venv/Scripts/activate     # si ya tienes el venv</code></pre>
+
+<p>Si <strong>no</strong> tienes el venv creado todavía:</p>
+
+<pre><code>python -m venv .venv
+source .venv/Scripts/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements-dev.txt</code></pre>
+
+<p>Si te falta algo, instala manualmente:</p>
+
+<pre><code>python -m pip install PySide6 python-gnupg Pillow requests pyinstaller debx</code></pre>
+
+<h2 id="icons">3 · Generar los iconos</h2>
+
+<pre><code>python generate_icon.py</code></pre>
+
+<p>Deberías ver:</p>
+
+<pre><code>  · assets/icon.png
+  · assets/icon_256.png
+  · assets/icon.ico
+
+✅ Iconos generados en ./assets/</code></pre>
+
+<div class="box box-info">
+    <strong>ℹ️ Nota</strong>
+    Si no ejecutas este paso, el <code>.exe</code> saldrá con el icono por defecto de Python y el <code>.deb</code> sin icono.
+</div>
+
+<h2 id="build">4 · Compilar todo</h2>
+
+<pre><code>python build_installers.py</code></pre>
+
+<p>Esto hace <strong>tres cosas</strong> en orden:</p>
+
+<h3>Paso A · PyInstaller → genera el ejecutable base</h3>
+
+<pre><code>dist/iso-verifier.exe           (Windows)
+dist/iso-verifier               (Linux, sin extensión)</code></pre>
+
+<h3>Paso B · debx → genera el paquete Debian</h3>
+
+<pre><code>dist/iso-verifier_1.5.0_amd64.deb</code></pre>
+
+<h3>Paso C · Inno Setup → genera el instalador de Windows</h3>
+
+<pre><code>dist/iso-verifier_setup.exe</code></pre>
+
+<h2 id="result">5 · Resultado final</h2>
+
+<p>En la carpeta <code>dist/</code> tendrás:</p>
+
+<table>
+    <thead>
+        <tr><th>Archivo</th><th>Plataforma</th><th>Uso</th></tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>iso-verifier.exe</code></td>
+            <td>Windows</td>
+            <td>Ejecutable directo (sin instalador)</td>
+        </tr>
+        <tr>
+            <td><code>iso-verifier_setup.exe</code></td>
+            <td>Windows</td>
+            <td>Instalador con accesos directos, menú inicio, etc.</td>
+        </tr>
+        <tr>
+            <td><code>iso-verifier_1.5.0_amd64.deb</code></td>
+            <td>Linux (Debian/Ubuntu)</td>
+            <td>Paquete instalable con <code>dpkg -i</code></td>
+        </tr>
+    </tbody>
+</table>
+
+<h2 id="test">6 · Verificar los artefactos</h2>
+
+<h3>Probar el <code>.exe</code> "pelado"</h3>
+
+<pre><code>./dist/iso-verifier.exe</code></pre>
+
+<p>Se abre la app directamente, sin instalación.</p>
+
+<h3>Probar el instalador <code>.exe</code></h3>
+
+<p>Doble clic en <code>dist/iso-verifier_setup.exe</code>. Se abre el asistente de Inno Setup:</p>
+
+<ol>
+    <li>Elegir carpeta de instalación.</li>
+    <li>Crear accesos directos.</li>
+    <li>Instalar.</li>
+    <li>Ejecutar desde el menú inicio o escritorio.</li>
+</ol>
+
+<h3>Probar el <code>.deb</code> en Linux</h3>
+
+<p>Copia el <code>.deb</code> a un Linux (Debian/Ubuntu) y allí:</p>
+
+<pre><code>sudo dpkg -i iso-verifier_1.5.0_amd64.deb
+sudo apt-get install -f    # por si faltan dependencias
+iso-verifier               # ejecutar</code></pre>
+
+<h2 id="deb-linux" class="page-break">7 · Generar un <code>.deb</code> funcional en Linux</h2>
+
+<div class="box box-danger">
+    <strong>🚨 Aviso importante</strong>
+    El <code>.deb</code> que generas <strong>desde Windows con debx</strong> contiene el <strong>binario de Windows</strong>, no el de Linux. Es un contenedor <code>.deb</code> válido, pero al ejecutarlo en Linux fallará con <code>Exec format error</code>.
+</div>
+
+<h3>Opción A · Compilar en Linux (recomendado)</h3>
+
+<p>Lleva el código (sin <code>.venv/</code>, <code>dist/</code>, <code>build/</code>) a un Linux y allí:</p>
+
+<pre><code>python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements-dev.txt
+python generate_icon.py
+python build_installers.py</code></pre>
+
+<p>Esto genera un <code>.deb</code> <strong>con binario Linux</strong>, que sí funciona.</p>
+
+<h3>Opción B · Usar WSL</h3>
+
+<p>Desde Windows, con WSL instalado:</p>
+
+<pre><code>wsl -e bash -c "
+  cd /mnt/c/Users/Recepción/Documents/Iso_Verifier &amp;&amp;
+  python3 -m venv .venv-linux &amp;&amp;
+  source .venv-linux/bin/activate &amp;&amp;
+  pip install -r requirements-dev.txt &amp;&amp;
+  python generate_icon.py &amp;&amp;
+  python build_installers.py
+"</code></pre>
+
+<p>Genera un <code>.deb</code> real para Linux sin salir de tu Windows.</p>
+
+<h2 id="clean">8 · Limpiar y recompilar</h2>
+
+<pre><code>rm -rf dist/ build/
+python build_installers.py</code></pre>
+
+<p>O simplemente ejecuta <code>python build_installers.py</code> de nuevo: el script ya limpia <code>dist/</code> y <code>build/</code> al inicio.</p>
+
+<h2 id="trouble">9 · Solución de problemas</h2>
+
+<table>
+    <thead>
+        <tr><th>Error</th><th>Causa</th><th>Solución</th></tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>PyInstaller no encontrado</code></td>
+            <td>No está en el venv</td>
+            <td><code>pip install pyinstaller</code></td>
+        </tr>
+        <tr>
+            <td><code>debx no está instalada</code></td>
+            <td>No está en el venv</td>
+            <td><code>pip install debx</code></td>
+        </tr>
+        <tr>
+            <td><code>No se encontró Inno Setup</code></td>
+            <td>Inno no instalado</td>
+            <td>Descárgalo e instálalo</td>
+        </tr>
+        <tr>
+            <td><code>setup.exe</code> no aparece</td>
+            <td>Inno falló</td>
+            <td>Revisa la consola, error de rutas</td>
+        </tr>
+        <tr>
+            <td><code>.deb</code> da <code>Exec format error</code></td>
+            <td>Compilado en Windows</td>
+            <td>Compila el <code>.deb</code> en Linux o WSL</td>
+        </tr>
+        <tr>
+            <td><code>icon.png not found</code></td>
+            <td>No ejecutaste <code>generate_icon.py</code></td>
+            <td>Ejecútalo primero</td>
+        </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<h2 id="quick">⚡ Resumen ultra-rápido</h2>
+
+<pre><code>cd ~/Documents/Iso_Verifier
+source .venv/Scripts/activate
+python generate_icon.py
+python build_installers.py
+ls -lh dist/</code></pre>
+
+<p>Y ya tienes los tres artefactos en <code>dist/</code>.</p>
+
+<footer>
+    <p><strong>Verificador de Firmas ISO</strong> — Guía de compilación v1.0</p>
+    <p>
+        <span class="footer-tag">PySide6</span>
+        <span class="footer-tag">PyInstaller</span>
+        <span class="footer-tag">debx</span>
+        <span class="footer-tag">Inno Setup</span>
+    </p>
+    <p style="margin-top: 20px; font-size: 12px;">
+        Documento generado automáticamente. Última actualización: <span id="fecha"></span>
+    </p>
+    <script>
+        document.getElementById('fecha').textContent =
+            new Date().toLocaleDateString('es-ES', {
+                year: 'numeric', month: 'long', day: 'numeric'
+            });
+    </script>
+</footer>
+
+</div>
+
+</body>
+</html>

@@ -79,3 +79,19 @@ screenshots/
 !assets/icon.png
 !assets/icon_256.png
 !docs/screenshots/*.png
+
+# Tokens y secretos — NUNCA subir
+*token*.txt
+token*.txt
+*.key
+.env
+
+# Basura de pip install mal escrito
+=*
+0.*
+*.0
+# Notas temporales
+reactivar*.txt
+*token*.txt
+.env
+*.key
