@@ -347,6 +347,8 @@ def _descargar(url: str, timeout: int = 12) -> bytes | None:
         return None
 
 
+# --- Definición de URLs para cada distribución ---
+
 def _ubuntu_urls(flavor: str, version: str) -> dict:
     if flavor == "ubuntu":
         base = f"https://releases.ubuntu.com/{version}"
@@ -436,6 +438,69 @@ def _biglinux_urls(version: str) -> dict:
     }
 
 
+def _rocky_urls(version: str) -> dict:
+    base = f"https://download.rockylinux.org/pub/rocky/{version}/isos/x86_64"
+    return {
+        "sums": f"{base}/CHECKSUM",
+        "gpg": f"{base}/CHECKSUM.asc",
+        "distro": "Rocky Linux",
+    }
+
+
+def _alma_urls(version: str) -> dict:
+    base = f"https://repo.almalinux.org/almalinux/{version}/isos/x86_64"
+    return {
+        "sums": f"{base}/CHECKSUM",
+        "gpg": f"{base}/CHECKSUM.asc",
+        "distro": "AlmaLinux",
+    }
+
+
+def _alpine_urls(version: str) -> dict:
+    base = f"https://dl-cdn.alpinelinux.org/alpine/{version}/releases/x86_64"
+    return {
+        "sums": f"{base}/alpine-standard-{version}-x86_64.iso.sha256",
+        "gpg": None,
+        "distro": "Alpine Linux",
+    }
+
+
+def _void_urls(version: str) -> dict:
+    return {
+        "sums": "https://repo-default.voidlinux.org/live/current/sha256sum.txt",
+        "gpg": "https://repo-default.voidlinux.org/live/current/sha256sum.sig",
+        "distro": "Void Linux",
+    }
+
+
+def _gentoo_urls(version: str) -> dict:
+    base = ("https://distfiles.gentoo.org/releases/amd64/autobuilds/"
+            "current-install-amd64-minimal")
+    return {
+        "sums": f"{base}/latest-install-amd64-minimal.txt",
+        "gpg": None,
+        "distro": "Gentoo",
+    }
+
+
+def _popos_urls(version: str) -> dict:
+    base = f"https://iso.pop-os.org/{version}/amd64"
+    return {
+        "sums": f"{base}/SHA256SUMS",
+        "gpg": f"{base}/SHA256SUMS.gpg",
+        "distro": "Pop!_OS",
+    }
+
+
+def _kde_neon_urls(version: str) -> dict:
+    return {
+        "sums": f"https://files.kde.org/neon/images/{version}/current/SHA256SUMS",
+        "gpg": None,
+        "distro": "KDE Neon",
+    }
+
+
+
 DISTRO_PATTERNS = [
     {
         "regex": re.compile(
@@ -488,6 +553,37 @@ DISTRO_PATTERNS = [
     {
         "regex": re.compile(r"^biglinux_(?P<version>\d{4}-\d{2}-\d{2})_.*\.iso$", re.IGNORECASE),
         "urls": lambda m: _biglinux_urls(m.group("version")),
+    },
+    {
+        "regex": re.compile(r"^Rocky-(?P<version>\d+(?:\.\d+)?)-.*\.iso$", re.IGNORECASE),
+        "urls": lambda m: _rocky_urls(m.group("version")),
+    },
+    {
+        "regex": re.compile(r"^AlmaLinux-(?P<version>\d+(?:\.\d+)?)-.*\.iso$", re.IGNORECASE),
+        "urls": lambda m: _alma_urls(m.group("version")),
+    },
+    {
+        "regex": re.compile(r"^alpine-standard-(?P<version>\d+\.\d+(?:\.\d+)?)-x86_64\.iso$",
+                            re.IGNORECASE),
+        "urls": lambda m: _alpine_urls(m.group("version")),
+    },
+    {
+        "regex": re.compile(r"^void-live-(?P<version>.*)\.iso$", re.IGNORECASE),
+        "urls": lambda m: _void_urls(m.group("version")),
+    },
+    {
+        "regex": re.compile(
+            r"^install-amd64-minimal-(?P<version>\d{8}T\d{6}Z)\.iso$",
+            re.IGNORECASE),
+        "urls": lambda m: _gentoo_urls(m.group("version")),
+    },
+    {
+        "regex": re.compile(r"^pop-os_(?P<version>.*)\.iso$", re.IGNORECASE),
+        "urls": lambda m: _popos_urls(m.group("version")),
+    },
+    {
+        "regex": re.compile(r"^neon-(?P<version>.*)\.iso$", re.IGNORECASE),
+        "urls": lambda m: _kde_neon_urls(m.group("version")),
     },
 ]
 
