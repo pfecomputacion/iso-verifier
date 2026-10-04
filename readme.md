@@ -1,7 +1,15 @@
 # 🔐 Verificador de Firmas ISO
 
-Aplicación de escritorio para **verificar la autenticidad de imágenes ISO**
-mediante firmas **GPG** (Linux) o hashes **SHA-256** (Windows y otros).
+[![Build](https://github.com/pfecomputacion/iso-verifier/actions/workflows/build.yml/badge.svg)](https://github.com/pfecomputacion/iso-verifier/actions/workflows/build.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
+[![PySide6](https://img.shields.io/badge/PySide6-6.6%2B-green.svg)](https://www.qt.io/qt-for-python)
+[![Release](https://img.shields.io/github/v/release/pfecomputacion/iso-verifier)](https://github.com/pfecomputacion/iso-verifier/releases)
+[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux-lightgrey.svg)]()
+
+Aplicación de escritorio para verificar la autenticidad de imágenes ISO
+mediante firmas GPG o hashes SHA-256.
+
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
 ![PySide6](https://img.shields.io/badge/PySide6-6.6%2B-green)
